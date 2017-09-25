@@ -1,0 +1,31 @@
+#include <iostream>
+#include <queue> 
+
+using namespace std; 
+
+class singletoneWithLongevity
+{
+public:
+	singletoneWithLongevity(int x) : deathTime(x) {}
+	virtual ~singletoneWithLongevity() = 0;
+	static bool chek(singletoneWithLongevity *first, singletoneWithLongevity *second)
+	{
+		if (first->deathTime < second->deathTime)
+			return 1;
+		else
+			return 0;
+	}
+	int getInstance(singletoneWithLongevity *abc)
+	{
+		return abc->deathTime;
+	}
+private:
+	int deathTime;
+};
+
+　
+int main()
+{
+	queue<singletoneWithLongevity> myQueue;
+	return 0;
+}
