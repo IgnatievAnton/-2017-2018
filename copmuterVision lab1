@@ -1,0 +1,41 @@
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
+#include <iostream>
+#include <stdio.h>
+
+using namespace std;
+using namespace cv;
+
+void MatchingMethod(int, void*, Mat img, Mat templ,Mat result)
+{
+	Mat img_display;
+	img.copyTo(img_display);
+
+	int result_cols = img.cols - templ.cols + 1; //размеры результирующей матрицы 
+	int result_rows = img.rows - templ.rows + 1;
+
+	result.create(result_rows, result_cols, CV_32FC1);
+
+	matchTemplate(img, templ, result, CV_TM_CCORR); // выполняется сопостановление шаблонов в данной встроенной функции что где куда и каким способом 
+	//http://docs.opencv.org/2.4/doc/tutorials/imgproc/histograms/template_matching/template_matching.html
+	normalize(result, result, 0, 1, NORM_MINMAX, -1, Mat());
+
+	double minVal, maxVal;
+	Point minLoc, maxLoc, matchLoc;
+
+	minMaxLoc(result, &minVal, &maxVal, &minLoc, &maxLoc, Mat());
+	rectangle(result, matchLoc, Point(matchLoc.x + templ.cols, matchLoc.y + templ.rows), Scalar::all(0), 2, 8, 0);
+	imwrite("result_0gradus.bmp", img_display);
+	return;
+}
+
+int main()
+{
+	Mat img = imread("main_s1.bmp", 1);;
+	Mat templ = imread("own_4.bmp", 1);;
+	Mat result;
+	MatchingMethod(0, 0, img, templ, result);
+
+	waitKey(0);
+	return 0;
+}
