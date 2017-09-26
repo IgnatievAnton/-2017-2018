@@ -1,0 +1,111 @@
+using namespace std;
+//using namespace cv;
+//
+//
+//void transportAndCast(Mat *image, int sizeR, int sizeH, float **arrayPix)
+//{
+//	for (int i = 0; i < sizeR; i++)
+//	{
+//		for (int j = 0; j < sizeH; j++)
+//		{
+//			arrayPix[i][j]=(int)image->at<uchar>(i,j);
+//			arrayPix[i][j] = arrayPix[i][j] - 127;
+//		}
+//	}
+//}
+//void CastAndtransport(Mat *image, int sizeR, int sizeH, float **arrayPix)
+//{
+//	for (int i = 0; i < sizeR; i++)
+//	{
+//		for (int j = 0; j < sizeH; j++)
+//		{
+//			arrayPix[i][j] = arrayPix[i][j] + 127;
+//			image->at<uchar>(i, j) = arrayPix[i][j]; 
+//		}
+//	}
+//}
+//
+//void Cross_correlation(float **firstMass, Mat *image, float **firstMass2, Mat *image2, double **res,int visota,int shirina, int a,int b)
+//{
+//	cout << visota << "  " << shirina << endl ;
+//	float sum = 0;
+//	cout << "!!!!!!!!!" << "   " << sum << endl;
+//	//cin.get();
+//
+//	if (shirina == a )
+//	{
+//		visota++;
+//		shirina = 0;
+//	}
+//	for (int i = visota; i < image2->rows; i++)
+//	{
+//		for (int j = shirina; j < image2->cols; j++)
+//		{
+//			sum += firstMass[i][j] * firstMass2[i][j];
+//			//cout << sum << endl;
+//		}
+//	}
+//	res[visota][shirina] = sum;
+//	cout << sum << endl;
+//	sum = 0;
+//	shirina++;
+//	Cross_correlation(firstMass, image, firstMass2, image2, res, visota, shirina,a,b);
+//}
+//int main()
+//{
+//	Mat imageFirst = imread("main_s1.bmp", CV_LOAD_IMAGE_GRAYSCALE);
+//	int sizeRow = imageFirst.rows ; // высота 
+//	int sizeHight = imageFirst.cols ; // ширина
+//	
+//	cout << sizeRow << endl;
+//	cout << sizeHight << endl;
+//	Mat imageSecond = imread("own_4.bmp", CV_LOAD_IMAGE_GRAYSCALE);
+//	int sizeRow2 = imageSecond.rows ;
+//	int sizeHight2 = imageSecond.cols ;
+//	int result_cols = imageFirst.cols - imageSecond.cols + 1;
+//	int result_rows = imageFirst.rows - imageSecond.rows + 1;
+//	//Mat res(sizeRow-sizeRow2,sizeHight-sizeHight2,CV_32F); 
+//	double **res = new double *[sizeRow - sizeRow2];
+//	for (int i = 0; i < sizeRow; i++)
+//	{
+//		res[i] = new double[sizeHight - sizeHight2];
+//	}
+//	cout << sizeRow - sizeRow2 << endl;
+//	cout << sizeHight - sizeHight2 << endl;
+//	float **pixelArray1 = new float *[sizeRow];
+//	for (int i = 0; i < sizeRow; i++)
+//	{
+//		pixelArray1[i] = new float[sizeHight];
+//	}
+//	float **pixelArray2 = new float *[sizeRow2];
+//	for (int i = 0; i < sizeRow2; i++)
+//	{
+//		pixelArray2[i] = new float[sizeHight2];
+//	}
+//
+//	//transportAndCast(&imageFirst, sizeRow, sizeHight, pixelArray1);
+//	//transportAndCast(&imageSecond, sizeRow2, sizeHight2, pixelArray2);
+//	res[2][102] = 0;
+//	//Cross_correlation(pixelArray1, &imageFirst, pixelArray2, &imageSecond, res, 0, 0, sizeRow - sizeRow2, sizeHight - sizeHight2);
+//	/*for (int i = 0; i < sizeRow; i++)
+//	{
+//		for (int j = 0; j < sizeHight; j++)
+//		{
+//			cout << pixelArray1[i][j] << pixelArray2[i][j] << endl;
+//			int a = pixelArray1[i][j];
+//			int b = pixelArray2[i][j];
+//			cout <<"Int: "<< a*b << endl;
+//			cout << pixelArray1[i][j] * pixelArray2[i][j] << endl;
+//			cin.get();
+//		}
+//	}*/
+//	for (int i = 0; i < sizeRow; i++)
+//	{
+//		delete[]pixelArray1[i];
+//	}
+//	for (int i = 0; i < sizeRow2; i++)
+//	{
+//		delete[]pixelArray2[i];
+//	}
+//	return 0;
+//}
