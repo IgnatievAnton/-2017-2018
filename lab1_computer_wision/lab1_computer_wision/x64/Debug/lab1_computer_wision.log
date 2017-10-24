@@ -1,0 +1,6 @@
+﻿  Source.cpp
+c:\users\anton\documents\visual studio 2017\projects\lab1_computer_wision\lab1_computer_wision\source.cpp(29): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\users\anton\documents\visual studio 2017\projects\lab1_computer_wision\lab1_computer_wision\source.cpp(70): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+c:\users\anton\documents\visual studio 2017\projects\lab1_computer_wision\lab1_computer_wision\source.cpp(72): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+  lab1_computer_wision.vcxproj -> C:\Users\Anton\documents\visual studio 2017\Projects\lab1_computer_wision\x64\Debug\lab1_computer_wision.exe
+  lab1_computer_wision.vcxproj -> C:\Users\Anton\documents\visual studio 2017\Projects\lab1_computer_wision\x64\Debug\lab1_computer_wision.pdb (Partial PDB)

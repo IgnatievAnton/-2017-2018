@@ -1,0 +1,307 @@
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
+#include <iostream>
+#include <stdio.h>
+
+using namespace std;
+using namespace cv;
+
+void MatchingMethod(int, void*, Mat img, Mat templ,Mat result)
+{
+	Mat img_display;
+	img.copyTo(img_display);
+
+	int result_cols = img.cols - templ.cols + 1; //размеры результирующей матрицы 
+	int result_rows = img.rows - templ.rows + 1;
+
+	result.create(result_rows, result_cols, CV_32FC1);
+
+	matchTemplate(img, templ, result, CV_TM_CCORR); // выполняется сопостановление шаблонов в данной встроенной функции что где куда и каким способом 
+	                                                //http://docs.opencv.org/2.4/doc/tutorials/imgproc/histograms/template_matching/template_matching.html
+	normalize(result, result, 0, 1, NORM_MINMAX, -1, Mat());
+
+	double minVal, maxVal;
+	Point minLoc, maxLoc, matchLoc;
+
+	minMaxLoc(result, &minVal, &maxVal, &minLoc, &maxLoc, Mat());
+	rectangle(result, matchLoc, Point(matchLoc.x + templ.cols, matchLoc.y + templ.rows), Scalar::all(0), 2, 8, 0);
+	imwrite("result_0gradus.bmp", img_display);
+	return;
+}
+
+int main()
+{
+	Mat img = imread("main_s1.bmp", 1);;
+	Mat templ = imread("own_4.bmp", 1);;
+	Mat result;
+	MatchingMethod(0, 0, img, templ, result);
+	return 0;
+}
+
+
+
+
+
+//
+//
+//void transportAndCast(Mat *image, int sizeR, int sizeH, float **arrayPix)
+//{
+//	for (int i = 0; i < sizeR; i++)
+//	{
+//		for (int j = 0; j < sizeH; j++)
+//		{
+//			arrayPix[i][j]=(int)image->at<uchar>(i,j);
+//			arrayPix[i][j] = arrayPix[i][j] - 127;
+//		}
+//	}
+//}
+//void CastAndtransport(Mat *image, int sizeR, int sizeH, float **arrayPix)
+//{
+//	for (int i = 0; i < sizeR; i++)
+//	{
+//		for (int j = 0; j < sizeH; j++)
+//		{
+//			arrayPix[i][j] = arrayPix[i][j] + 127;
+//			image->at<uchar>(i, j) = arrayPix[i][j]; 
+//		}
+//	}
+//}
+//
+//void Cross_correlation(float **firstMass, Mat *image, float **firstMass2, Mat *image2, double **res,int visota,int shirina, int a,int b)
+//{
+//	cout << visota << "  " << shirina << endl ;
+//	float sum = 0;
+//	cout << "!!!!!!!!!" << "   " << sum << endl;
+//	//cin.get();
+//
+//	if (shirina == a )
+//	{
+//		visota++;
+//		shirina = 0;
+//	}
+//	for (int i = visota; i < image2->rows; i++)
+//	{
+//		for (int j = shirina; j < image2->cols; j++)
+//		{
+//			sum += firstMass[i][j] * firstMass2[i][j];
+//			//cout << sum << endl;
+//		}
+//	}
+//	res[visota][shirina] = sum;
+//	cout << sum << endl;
+//	sum = 0;
+//	shirina++;
+//	Cross_correlation(firstMass, image, firstMass2, image2, res, visota, shirina,a,b);
+//}
+//int main()
+//{
+//	Mat imageFirst = imread("main_s1.bmp", CV_LOAD_IMAGE_GRAYSCALE);
+//	int sizeRow = imageFirst.rows ; // высота 
+//	int sizeHight = imageFirst.cols ; // ширина
+//	
+//	cout << sizeRow << endl;
+//	cout << sizeHight << endl;
+//	Mat imageSecond = imread("own_4.bmp", CV_LOAD_IMAGE_GRAYSCALE);
+//	int sizeRow2 = imageSecond.rows ;
+//	int sizeHight2 = imageSecond.cols ;
+//	int result_cols = imageFirst.cols - imageSecond.cols + 1;
+//	int result_rows = imageFirst.rows - imageSecond.rows + 1;
+//	//Mat res(sizeRow-sizeRow2,sizeHight-sizeHight2,CV_32F); 
+//	double **res = new double *[sizeRow - sizeRow2];
+//	for (int i = 0; i < sizeRow; i++)
+//	{
+//		res[i] = new double[sizeHight - sizeHight2];
+//	}
+//	cout << sizeRow - sizeRow2 << endl;
+//	cout << sizeHight - sizeHight2 << endl;
+//	float **pixelArray1 = new float *[sizeRow];
+//	for (int i = 0; i < sizeRow; i++)
+//	{
+//		pixelArray1[i] = new float[sizeHight];
+//	}
+//	float **pixelArray2 = new float *[sizeRow2];
+//	for (int i = 0; i < sizeRow2; i++)
+//	{
+//		pixelArray2[i] = new float[sizeHight2];
+//	}
+//
+//	//transportAndCast(&imageFirst, sizeRow, sizeHight, pixelArray1);
+//	//transportAndCast(&imageSecond, sizeRow2, sizeHight2, pixelArray2);
+//	res[2][102] = 0;
+//	//Cross_correlation(pixelArray1, &imageFirst, pixelArray2, &imageSecond, res, 0, 0, sizeRow - sizeRow2, sizeHight - sizeHight2);
+//	/*for (int i = 0; i < sizeRow; i++)
+//	{
+//		for (int j = 0; j < sizeHight; j++)
+//		{
+//			cout << pixelArray1[i][j] << pixelArray2[i][j] << endl;
+//			int a = pixelArray1[i][j];
+//			int b = pixelArray2[i][j];
+//			cout <<"Int: "<< a*b << endl;
+//			cout << pixelArray1[i][j] * pixelArray2[i][j] << endl;
+//			cin.get();
+//		}
+//	}*/
+//	for (int i = 0; i < sizeRow; i++)
+//	{
+//		delete[]pixelArray1[i];
+//	}
+//	for (int i = 0; i < sizeRow2; i++)
+//	{
+//		delete[]pixelArray2[i];
+//	}
+//	return 0;
+//}
+//
+//
+
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
+#include <iostream>
+#include <stdio.h>
+
+using namespace std;
+using namespace cv;
+
+/// Global Variables
+Mat img;
+Mat templ;
+Mat result;
+char* image_window = "Source Image";
+char* result_window = "Result window";
+
+int match_method;
+int max_Trackbar = 5;
+
+/// Function Headers
+void MatchingMethod(int, void*);
+
+/** @function main */
+int main()
+{
+	/// Load image and template
+	img = imread("main_s1.bmp", 1);
+	templ = imread("own_4Coef1.8.bmp", 1);
+
+	/// Create windows
+	namedWindow(image_window, CV_WINDOW_AUTOSIZE);
+	namedWindow(result_window, CV_WINDOW_AUTOSIZE);
+
+	/// Create Trackbar
+	char* trackbar_label = "Method: \n 0: SQDIFF \n 1: SQDIFF NORMED \n 2: TM CCORR \n 3: TM CCORR NORMED \n 4: TM COEFF \n 5: TM COEFF NORMED";
+	createTrackbar(trackbar_label, image_window, &match_method, max_Trackbar, MatchingMethod);
+
+	MatchingMethod(0, 0);
+
+	waitKey(0);
+	return 0;
+}
+
+/**
+* @function MatchingMethod
+* @brief Trackbar callback
+*/
+
+
+
+void MatchingMethod(int, void*)
+{
+	/// Source image to display
+	Mat img_display;
+	img.copyTo(img_display);
+
+	/// Create the result matrix
+	int result_cols = img.cols - templ.cols + 1;
+	int result_rows = img.rows - templ.rows + 1;
+
+	result.create(result_rows, result_cols, CV_32FC1);
+
+	/// Do the Matching and Normalize
+	matchTemplate(img, templ, result, CV_TM_CCORR);
+	normalize(result, result, 0, 1, NORM_MINMAX, -1, Mat());
+
+	/// Localizing the best match with minMaxLoc
+	double minVal; double maxVal; Point minLoc; Point maxLoc;
+	Point matchLoc;
+
+	minMaxLoc(result, &minVal, &maxVal, &minLoc, &maxLoc, Mat());
+
+	/// For SQDIFF and SQDIFF_NORMED, the best matches are lower values. For all the other methods, the higher the better
+	if (match_method == CV_TM_SQDIFF || match_method == CV_TM_SQDIFF_NORMED)
+	{
+		matchLoc = minLoc;
+	}
+	else
+	{
+		matchLoc = maxLoc;
+	}
+
+	/// Show me what you got
+	rectangle(img_display, matchLoc, Point(matchLoc.x + templ.cols, matchLoc.y + templ.rows), Scalar::all(0), 2, 8, 0);
+	rectangle(result, matchLoc, Point(matchLoc.x + templ.cols, matchLoc.y + templ.rows), Scalar::all(0), 2, 8, 0);
+
+	imshow(image_window, img_display);
+	imshow(result_window, result);
+
+	result.convertTo(result, CV_8UC3, 255.0);
+
+	imwrite("result_mashtabCoef1.8.bmp", img_display);
+	imwrite("resultMatrixCorelationCoef1.8.bmp", result);
+	return;
+}
+
+
+
+
+//#include "opencv2/highgui/highgui.hpp"
+//#include "opencv2/imgproc/imgproc.hpp"
+//#include <iostream>
+//#include <stdio.h>
+//
+//using namespace std;
+//using namespace cv;
+//
+//int match_method = CV_TM_CCORR;
+//
+//const string Source_image = "Source_image";
+//const string kernel_image = "kernel_image";
+//const string Result_image = "Result_image"; 
+//
+//
+//int main()
+//{
+//	Mat source, tmp, mstrixCor, result;
+//	source = imread("main_s1.bmp", 1);
+//	source.convertTo(source, CV_32FC1);
+//	source -= 128;
+//	tmp = imread("own_4.bmp", 1);
+//	tmp.convertTo(tmp, CV_32FC1);
+//	tmp -= 128;
+//	//imshow("hh", tmp);
+//	int result_cols = source.cols - tmp.cols + 1;
+//	int result_rows = source.rows - tmp.rows + 1;
+//
+//	result.create(result_rows, result_cols,CV_32FC1);
+//
+//	matchTemplate(source, tmp, result, match_method);
+//	normalize(result, result, 0, 1, NORM_MINMAX, -1, Mat());
+//
+//	double minVal, maxVal;
+//	Point minLic, maxLoc, matchLoc;
+//	minMaxLoc(result, &minVal, &maxVal, &minLic, &maxLoc, Mat());
+//
+//	rectangle(source, matchLoc, Point(matchLoc.x + tmp.cols, matchLoc.y + tmp.rows), Scalar::all(0), 2, 8, 0);
+//	rectangle(result, matchLoc, Point(matchLoc.x + tmp.cols, matchLoc.y + tmp.rows), Scalar::all(0), 2, 8, 0);
+//
+//	namedWindow(Source_image, CV_WINDOW_AUTOSIZE);
+//	namedWindow(kernel_image, CV_WINDOW_AUTOSIZE);
+//	namedWindow(Result_image, CV_WINDOW_AUTOSIZE);
+//	normalize(tmp, tmp, 0, 255, NORM_MINMAX, CV_8UC1);
+//
+//	imshow(Source_image, source);
+//	imshow(kernel_image, tmp);
+//	imshow(Result_image,result);
+//	waitKey(0);
+//	return 0;
+//}
+
+
