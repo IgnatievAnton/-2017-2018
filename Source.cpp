@@ -81,10 +81,8 @@ void worck2(const string s, IplImage *im)
 int main()
 {
 	 IplImage* image = 0;
-	//image = cvLoadImage("cat.bmp", 1);
-	//image = cvLoadImage("lena.bmp", 1);
 	  image = cvLoadImage("m.jpg", 1);
-	  worck("s", image);
+	  worck1("s", image);
 
 	return 0;
 }
