@@ -13,9 +13,36 @@
 
 using namespace std;
 using namespace cv;
+void worck1(const string s, IplImage *im)
+{
+	IplImage* gray = 0;
+	IplImage* dst = 0;
+	cvNamedWindow("gray", CV_WINDOW_AUTOSIZE);
+	cvNamedWindow("Canny1", CV_WINDOW_AUTOSIZE);
+	cvNamedWindow("Canny2", CV_WINDOW_AUTOSIZE);
+	cvNamedWindow("Canny3", CV_WINDOW_AUTOSIZE);
+	//create one chenal image and transformation
+	gray = cvCreateImage(cvGetSize(im), IPL_DEPTH_8U, 1);
+	dst = cvCreateImage(cvGetSize(im), IPL_DEPTH_8U, 1);
+	cvCvtColor(im, gray, CV_RGB2GRAY);
+	cvShowImage("original", im);
+	cvShowImage("gray", gray);
+	cvCanny(gray, dst, 60, 140, 3);
+	cvShowImage("Canny1", dst);
+	cvSaveImage("name.bmp", dst);
+	cvCanny(gray, dst, 60, 140, 3);
+	cvShowImage("Canny2", dst);
+	cvSaveImage("name3.bmp", dst);
+	cvCanny(gray, dst, 60, 140, 3);
+	cvShowImage("Canny3", dst);
+	cvSaveImage("name3.bmp", dst);
 
+	cvReleaseImage(&gray);
+	cvReleaseImage(&dst);
+	
+}
 
-void worck(const string s, IplImage *im)
+void worck2(const string s, IplImage *im)
 {
 	IplImage* gray = 0;
 	IplImage *smooth = 0;
