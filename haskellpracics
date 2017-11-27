@@ -1,0 +1,105 @@
+import Data.List(sort)
+import Control.Applicative
+import Data.Char 
+instance Applicative Parser where 
+  pure a = Parser $ \s -> Just (a ,s)
+  (<*>) = apply 
+--Парсер - комбинаторы 
+--способ который позволяет писать парсеры которые которые можно изменять в нутри кода 
+--Парсер - берет данные в неструктурированном виде и возвращает в структурированном виде 
+--parserInteger:: String -> Either yourType Int <- вот так правильно 
+-- mega parsec 
+--1. типы данных 
+--2. Примитивные парсеры (через патерн-мэтчинг и явно указание функции 
+--3. Комбинаторы - способы объеденять - парсеры 
+--4. ???
+--5. Profit
+
+
+newtype Parser a = Parser {runParser :: String -> Maybe (a,String)}
+
+ok :: Parser ()
+ok = Parser $ \s -> Just ( () , s)
+
+notOk :: Parser a
+notOk = Parser $ \_ -> Nothing 
+
+eof :: Parser () 
+eof = Parser fun
+  where 
+    fun [] = Just((),"")
+    fun _ = Nothing 
+
+isNot :: Parser a -> Parser ()  
+isNot a = Parser $ \s -> case runParser a s of 
+    Nothing -> Just ((),s)
+    _ -> Nothing 
+
+digit :: Parser Char
+digit = like isDigit
+
+many :: Parser a -> Parser [a] -- 0 или более
+some :: Parser a -> Parser [a] -- 1 или более 
+
+integer :: Parser Integer 
+integer = read <$> some digit 
+
+char :: Char -> Parser Char
+char c = Parser fun 
+  where 
+     fun [] = Nothing
+     fun (x:xs) = if c == x
+                  then Just(c,xs)
+                  else Nothing  
+
+
+like :: (Char -> Bool) -> Parser Char 
+like p = Parser fun 
+  where 
+     fun [] = Nothing
+     fun (x:xs) = if p x
+                  then Just (x,xs)
+                  else Nothing
+
+instance Functor Parser where 
+ fmap=pmap
+pmap ::(a->b) -> Parser a -> Parser b
+pmap a b =Parser $ \str -> runParser b str >>= \(x,rest) -> Just(a x,rest)
+
+
+
+
+apply :: Parser(a->b) -> Parser a -> Parser b 
+apply fp pa = Parser $ \s -> case runParser fp s of 
+     Nothing -> Nothing 
+     Just (func,rest) -> runParser (pmap func pa) rest
+
+
+anyChar :: Parser Char 
+anyChar = like (\_ -> True)
+--      = like (const True)
+
+sp:: Parser Char 
+sp = char ' '
+
+twoChars :: Parser [Char]
+twoChars = pure (\a _ b () -> [a,b])
+    <*> anyChar
+    <*> sp
+    <*> anyChar
+    <*> eof 
+
+
+
+orElse :: Parser a -> Parser a -> Parser a 
+orElse (Parser p1) (Parser p2) = Parser $ \str -> case p1 str of 
+    Nothing -> p2 str
+    x -> x 
+
+instance Alternative Parser where 
+    empty = notOk
+    (<|>) = orElse 
+
+
+
+
