@@ -1,0 +1,200 @@
+//#include <iostream>
+//#include <vector>
+//
+//using namespace std;
+//
+//class Branch
+//{
+//public:
+//	virtual void PrintType() = 0;
+//	virtual ~Branch() {};
+//};
+//
+//class Level1 : public Branch
+//{
+//	virtual void PrintType()
+//	{
+//		cout << "level1" << endl;
+//	}
+//};
+//class Level2: public Branch
+//{
+//	virtual void PrintType()
+//	{
+//		cout << "level2" << endl;
+//	}
+//};
+//class Level3 : public Branch
+//{
+//	virtual void PrintType()
+//	{
+//		cout << "level3" << endl;
+//	}
+//};
+//class Composite
+//{
+//private:
+//	vector<Branch*> b;
+//public:
+//	void addBra(Branch *Nb)
+//	{
+//		b.push_back(Nb);
+//	}
+//	void test()
+//	{
+//		for (int i = 0; i < b.size(); i++)
+//		{
+//			b[i]->PrintType();
+//		}
+//	}
+//	~Composite()
+//	{
+//		for (int i = 0; i < b.size(); i++)
+//		{
+//			delete b[i];
+//		}
+//	}
+//};
+//
+//class Visitor
+//{
+//public:
+//};
+//int main()
+//{
+//	Composite* newTree = new Composite;
+//	newTree->addBra(new Level1);
+//	newTree->addBra(new Level2);
+//	newTree->addBra(new Level3);
+//	newTree->test();
+//	return 0;
+//}
+
+　
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+class Branch
+{
+public:
+	virtual void accept(class Visitor*) = 0;
+	virtual void print() =0;
+};
+
+class Mid : public Branch
+{
+public:
+	void accept(Visitor*);
+	void print()
+	{
+		cout << "Midl" << endl;
+	}
+};
+class Top : public Branch
+{
+public:
+	void accept(Visitor*);
+	void print()
+	{
+		cout << "Top" << endl;
+	}
+};
+
+class Bottom : public Branch
+{
+public:
+	void accept(Visitor*);
+	void print()
+	{
+		cout << "Bottom" << endl;
+	}
+};
+
+class Composite
+{
+private:
+	vector<Branch*> b;
+public:
+	void accept(Visitor*);
+	void addBra(Branch *Nb)
+	{
+		b.push_back(Nb);
+	}
+	void print()
+	{
+		for (int i = 0; i < b.size(); i++)
+		{
+			b[i]->print();
+		}
+		cout << "123" << endl;
+	}
+	~Composite()
+	{
+		for (int i = 0; i < b.size(); i++)
+		{
+			delete b[i];
+		}
+	}
+};
+
+class Visitor
+{
+public:
+	virtual void visit(Branch*) {};
+	virtual void visit(Composite*) = 0;
+	virtual void visit(Bottom*) = 0;
+	virtual void visit(Top*) = 0;
+	virtual void visit(Mid*) = 0;
+};
+
+class CallVisitor :Visitor
+{
+public:
+	void visit(Composite *c)
+	{
+		c->print();
+	}
+	void visit(Bottom* b)
+	{
+		b->print();
+	}
+	void visit(Top* t)
+	{
+		t->print();
+	}
+	void visit(Mid* m)
+	{
+		m->print();
+	}
+};
+
+void Mid::accept(Visitor* v)
+{
+	v->visit(this);
+}
+void Top::accept(Visitor* v)
+{
+	v->visit(this);
+}
+void Bottom::accept(Visitor* v)
+{
+	v->visit(this);
+}
+
+void Composite::accept(Visitor* v)
+{
+	v->visit(this);
+}
+
+int main()
+{
+	Composite* newTree = new Composite;
+	newTree->addBra(new Mid);
+	newTree->addBra(new Top);
+	newTree->addBra(new Bottom);
+	CallVisitor call_operation;
+	call_operation.visit(newTree);
+	return 0;
+}
