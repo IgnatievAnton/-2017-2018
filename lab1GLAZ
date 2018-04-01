@@ -1,0 +1,357 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include "opencv2\core\core.hpp"
+#include "opencv2\highgui\highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
+#include <iostream>
+#include <stdio.h>
+#include <fstream>
+#define _USE_MATH_DEFINES
+#include <list>
+#include <vector>
+#include <math.h>
+
+using namespace std;
+using namespace cv;
+
+
+Rect setup(int number)
+{
+	if (number < 16)
+	{
+		return Rect(number*16,0,16,16);
+	}
+
+}
+Rect setup2(int number)
+{
+	if (number < 16)
+	{
+		return Rect(number * 16, 16, 16, 16);
+	}
+}
+Rect setup3(int number)
+{
+	if (number < 16)
+	{
+		return Rect(number * 16, 32, 16, 16);
+	}
+}
+Rect setup4(int number)
+{
+	if (number < 16)
+	{
+		return Rect(number * 16, 48, 16, 16);
+	}
+}
+Rect setup5(int number)
+{
+	if (number < 16)
+	{
+		return Rect(number * 16, 64, 16, 16);
+	}
+}
+Rect setup6(int number)
+{
+	if (number < 16)
+	{
+		return Rect(number * 16, 80, 16, 16);
+	}
+}
+Rect setup7(int number)
+{
+	if (number < 16)
+	{
+		return Rect(number * 16, 96, 16, 16);
+	}
+}
+Rect setup8(int number)
+{
+	if (number < 16)
+	{
+		return Rect(number * 16, 112, 16, 16);
+	}
+}
+//int checkPoint(Mat &img)
+//{
+//	int max = 0;
+//	for (int i=0;i <img.rows;i++)
+//	{
+//		for (int j=0;j<img.cols;j++)
+//		{
+//			int check = img.at<uchar>(i,j);
+//			if (check < 0)
+//				check = 0;
+//			else if (check > 255)
+//				check = 255;
+//			if (check > max)
+//				max = check;
+//		}
+//	}
+//	return max;
+//}
+
+int main() {
+	IplImage *image = NULL, *gauss_d1 = NULL, *gauss_d2 = NULL, *ganglionic = NULL, *res = NULL;
+	image = cvCreateImage(cvSize(256, 256), IPL_DEPTH_32F, 1);
+	gauss_d1 = cvCreateImage(cvSize(256, 256), IPL_DEPTH_32F, 1);
+	gauss_d2 = cvCreateImage(cvSize(256, 256), IPL_DEPTH_32F, 1);
+	ganglionic = cvCreateImage(cvSize(256, 256), IPL_DEPTH_32F, 1);
+	res = cvCreateImage(cvSize(256, 256), IPL_DEPTH_8U, 1);
+	//res_c = cvCreateImage(cvSize(256, 256), IPL_DEPTH_8U, 1);
+
+	//point
+	//cvZero(res);
+	//for (int i = 0; i < 13; i++) {
+	//  for (int j = 0; j < 13; j++) {
+	//    cvZero(image);
+	//    cvCircle(image, cvPoint(j + 128 - 6, i + 128 - 6), 3,
+	//      CV_RGB(127, 127, 127), -1, 8, 0);
+	//    cvSmooth(image, gauss_d1, CV_GAUSSIAN, 5, 0, 0, 0);
+	//    cvSmooth(image, gauss_d2, CV_GAUSSIAN, 11, 0, 0, 0);
+	//    cvSub(gauss_d1, gauss_d2, ganglionic, NULL);
+	//    float v = (((short *)
+	//      (ganglionic->imageData + (128)*ganglionic->widthStep))[128]) *3 + 128;
+	//  
+	//    cvCircle(res, cvPoint(j * 16 + 32, i * 16 + 32), 2, CV_RGB(v, v, v), 3, 8, 0);
+	//  }
+	//}
+
+	//cvZero(res);
+	//int v_prev = 0;
+	//for (int i = 0; i < 30; i++) {
+	//  cvZero(image);
+	//circle
+	//  cvCircle(image, cvPoint(128, 128), i, CV_RGB(1000, 1000, 1000), -1, 8, 0);
+	//ring
+	//  cvCircle(image, cvPoint(128, 128), i, CV_RGB(1000, 1000, 1000), 3, 8, 0);
+	//line
+	/* cvLine(image, cvPoint(128 + 100 * cos(i / 57.2), 128 + 100 * sin(i / 57.2)),
+	cvPoint(128 - 100 * cos(i / 57.2), 128 - 100 * sin(i / 57.2)),
+	CV_RGB(1000, 1000, 1000), 1, 8, 0);*/
+	//  cvSmooth(image, gauss_d1, CV_GAUSSIAN, 15, 0, 0, 0);
+	//  cvSmooth(image, gauss_d2, CV_GAUSSIAN, 31, 0, 0, 0);
+	//  cvSub(gauss_d1, gauss_d2, ganglionic, NULL);
+	//  int v = (int)(((short *)(ganglionic->imageData +
+	//    (128)*ganglionic->widthStep))[128]);
+	//  printf("%d\n", v);
+	//  cvLine(res, cvPoint(i * 8, 128 - v_prev / 5),
+	//    cvPoint((i + 1) * 8, 128 - v / 5), CV_RGB(255, 255, 255), 1, 8, 0);
+	//  v_prev = v;
+	//}
+
+//summ treh gunglios cletck
+	Mat matRes = cvarrToMat(image);
+	int pre = 128/2;
+	cvZero(res);
+	for (int i = 0; i < 180; i++) 
+	{
+			//линия поворачиваемая
+			 cvLine(image, cvPoint(128 + 100 * cos(i / 57.2), 128 + 100 * sin(i / 57.2)),cvPoint(128 - 100 * cos(i / 57.2), 128 - 100 * sin(i / 57.2)),CV_RGB(1000, 1000, 1000), 1, 8, 0); 
+			//линия: перемещаемая горизонтально
+			//круг
+			//cvCircle(image, cvPoint(128, 128), i, 1000, 0, 8, 0);
+			//
+			//кольцо
+			//cvCircle(image, cvPoint(128, 128), i, 1000, 3, 8, 0);
+			//
+			Rect r1(127, 113, 20, 20);
+			Mat rM1(256, 256, CV_32F, Scalar::all(0));
+			Mat rM12(256, 256, CV_32F, Scalar::all(0));
+			Mat rectRes(256, 256, CV_32F, Scalar::all(0));
+			Rect r2(142, 113, 20, 20);
+			Mat rM2(256, 256, CV_32F, Scalar::all(0));
+			Mat rM22(256, 256, CV_32F, Scalar::all(0));
+			Mat rectRes2(256, 256, CV_32F, Scalar::all(0));
+			Rect r3(157, 113, 20, 20);
+			Mat rM3(256, 256, CV_32F, Scalar::all(0));
+			Mat rM32(256, 256, CV_32F, Scalar::all(0));
+			Mat rectRes3(256, 256, CV_32F, Scalar::all(0));
+			GaussianBlur(matRes(r1), rM1(r1), Size(11, 11), 0);
+			GaussianBlur(matRes(r1), rM12(r1), Size(31, 31), 0);
+			GaussianBlur(matRes(r2), rM2(r2), Size(17, 17), 0);
+			GaussianBlur(matRes(r2), rM22(r2), Size(45, 45), 0);
+			GaussianBlur(matRes(r3), rM3(r3), Size(13, 13), 0);
+			GaussianBlur(matRes(r3), rM32(r3), Size(27, 27), 0);
+			subtract(rM1, rM12, rectRes);
+			subtract(rM22, rM2, rectRes2);
+			subtract(rM32, rM3, rectRes3);
+			Mat m_res = rectRes + rectRes2 + rectRes3;
+			double s = sum(m_res)[0];
+			int k = res->height / 2 - s / 1000;
+			cvLine(res, cvPoint(i * 8, pre), cvPoint((i + 1) * 8, k), 255, 1, 8, 0);
+			pre = k;
+		}
+
+	//Mat matRes = cvarrToMat(image);
+	//int pre = 128 / 2;
+	//cvZero(res);
+	//std::vector<Rect>vRect;
+	//for (int i = 0; i < 180; i++)
+	//{
+	//	cvZero(image);
+		//линия поворачиваемая
+		/* cvLine(image, cvPoint(128 + 100 * cos(i / 57.2), 128 + 100 * sin(i / 57.2)),
+		cvPoint(128 - 100 * cos(i / 57.2), 128 - 100 * sin(i / 57.2)),
+		CV_RGB(1000, 1000, 1000), 1, 8, 0); */
+		//линия: перемещаемая горизонтально
+		//  cvLine(image, cvPoint(40, y+8*i), cvPoint(216, y + 8 * i), CV_RGB(1000, 1000, 1000), 1, 8, 0);
+		//cvCircle(image, cvPoint(j + 128 - 6, i + 128 - 6), 3, CV_RGB(127, 127, 127), -1, 8, 0);
+		//
+		//круг
+		// cvCircle(image, cvPoint(128, 128), i, CV_RGB(1000, 1000, 1000), -1, 8, 0);
+		//
+		//кольцо
+		//cvCircle(image, cvPoint(128, 128), i, 1000, 3, 8, 0);
+		//16 на 16 
+	//	Rect r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16;
+	//	Mat rectRes1(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rectRes2(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rectRes3(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rectRes4(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rectRes5(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rectRes6(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rectRes7(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rectRes8(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rectRes9(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rectRes10(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rectRes11(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rectRes12(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rectRes13(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rectRes14(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rectRes15(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rectRes16(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rectRes17(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rectRes18(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rectRes19(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rectRes20(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rectRes21(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rectRes22(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rectRes23(256, 256, CV_32F, Scalar::all(0));
+	//	r1 = setup(1);
+	//	Mat rM1(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rM12(256, 256, CV_32F, Scalar::all(0));
+	//	r2 = setup(2);
+	//	Mat rM2(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rM22(256, 256, CV_32F, Scalar::all(0));
+	//	r3 = setup(3);
+	//	Mat rM3(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rM32(256, 256, CV_32F, Scalar::all(0));
+	//	r4 = setup(4);
+	//	Mat rM4(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rM42(256, 256, CV_32F, Scalar::all(0));
+	//	r5 = setup(5);
+	//	Mat rM5(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rM52(256, 256, CV_32F, Scalar::all(0));
+	//	r6 = setup(6);
+	//	Mat rM6(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rM62(256, 256, CV_32F, Scalar::all(0));
+	//	r7 = setup(7);
+	//	Mat rM7(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rM72(256, 256, CV_32F, Scalar::all(0));
+	//	r8 = setup(8);
+	//	Mat rM8(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rM82(256, 256, CV_32F, Scalar::all(0));
+	//	r9 = setup(9);
+	//	Mat rM9(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rM92(256, 256, CV_32F, Scalar::all(0));
+	//	r10 = setup(10);
+	//	Mat rM10(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rM102(256, 256, CV_32F, Scalar::all(0));
+	//	r11 = setup(11);
+	//	Mat rM11(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rM112(256, 256, CV_32F, Scalar::all(0));
+	//	r12 = setup(12);
+	//	Mat rM1_2(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rM1022(256, 256, CV_32F, Scalar::all(0));
+	//	r13 = setup(13);
+	//	Mat rM13(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rM132(256, 256, CV_32F, Scalar::all(0));
+	//	r14 = setup(14);
+	//	Mat rM14(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rM142(256, 256, CV_32F, Scalar::all(0));
+	//	r15 = setup(15);
+	//	Mat rM15(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rM152(256, 256, CV_32F, Scalar::all(0));
+	//	r16 = setup(16);
+
+	//	Rect r17, r18, r19, r20, r21, r22, r23, r24, r25, r26, r27, r28, r29, r30, r31, r32;
+	//	r17 = setup(1);
+	//	Mat rM17(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rM172(256, 256, CV_32F, Scalar::all(0));
+	//	r18 = setup(2);
+	//	Mat rM18(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rM182(256, 256, CV_32F, Scalar::all(0));
+	//	r19 = setup(3);
+	//	Mat rM19(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rM192(256, 256, CV_32F, Scalar::all(0));
+	//	r20 = setup(4);
+	//	Mat rM20(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rM202(256, 256, CV_32F, Scalar::all(0));
+	//	r21 = setup(5);
+	//	Mat rM210(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rM212(256, 256, CV_32F, Scalar::all(0));
+	//	r22 = setup(6);
+	//	Mat rM2_2(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rM222(256, 256, CV_32F, Scalar::all(0));
+	//	r23 = setup(7);
+	//	Mat rM23(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rM232(256, 256, CV_32F, Scalar::all(0));
+	//	r24 = setup(8);
+	//	Mat rM24(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rM242(256, 256, CV_32F, Scalar::all(0));
+	//	r25 = setup(9);
+	//	Mat rM25(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rM252(256, 256, CV_32F, Scalar::all(0));
+	//	r26 = setup(10);
+	//	Mat rM26(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rM262(256, 256, CV_32F, Scalar::all(0));
+	//	r27 = setup(11);
+	//	Mat rM27(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rM272(256, 256, CV_32F, Scalar::all(0));
+	//	r28 = setup(12);
+	//	Mat rM28(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rM282(256, 256, CV_32F, Scalar::all(0));
+	//	r29 = setup(13);
+	//	Mat rM29(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rM292(256, 256, CV_32F, Scalar::all(0));
+	//	r30 = setup(14);
+	//	Mat rM30(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rM302(256, 256, CV_32F, Scalar::all(0));
+	//	r31 = setup(15);
+	//	Mat rM31(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rM312(256, 256, CV_32F, Scalar::all(0));
+	//	r32 = setup(16);
+	//	Mat rM3_2(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rM322(256, 256, CV_32F, Scalar::all(0));
+	//	/*Mat rM1(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rM12(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rectRes(256, 256, CV_32F, Scalar::all(0));
+	//	Rect r2(142, 113, 20, 20);
+	//	Mat rM2(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rM22(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rectRes2(256, 256, CV_32F, Scalar::all(0));
+	//	Rect r3(157, 113, 20, 20);
+	//	Mat rM3(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rM32(256, 256, CV_32F, Scalar::all(0));
+	//	Mat rectRes3(256, 256, CV_32F, Scalar::all(0));*/
+	//	GaussianBlur(matRes(r1), rM1(r1), Size(7, 7), 0);
+	//	GaussianBlur(matRes(r1), rM12(r1), Size(14, 14), 0);
+	//	GaussianBlur(matRes(r2), rM2(r2), Size(7, 7), 0);
+	//	GaussianBlur(matRes(r2), rM22(r2), Size(14, 14), 0);
+	//	GaussianBlur(matRes(r3), rM3(r3), Size(7, 7), 0);
+	//	GaussianBlur(matRes(r3), rM32(r3), Size(14, 14), 0);
+	//	subtract(rM1, rM12, rectRes1);
+	//	subtract(rM22, rM2, rectRes2);
+	//	subtract(rM32, rM3, rectRes3);
+	//	Mat m_res = rectRes1 + rectRes2 + rectRes3;
+	//	double s = sum(m_res)[0];
+	//	int k = res->height / 2 - s / 1000;
+	//	cvLine(res, cvPoint(i * 8, pre), cvPoint((i + 1) * 8, k), 255, 1, 8, 0);
+	//	pre = k;
+	//}
+	cvNamedWindow("Test OpenCV", CV_WINDOW_AUTOSIZE);
+	cvShowImage("Test OpenCV", res);
+	cvSaveImage("field.png", res);
+	cvWaitKey(0);
+	return 0;
+}
